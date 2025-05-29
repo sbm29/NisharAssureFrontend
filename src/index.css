@@ -1,0 +1,137 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Elegant Light Theme Variables */
+    --background: 52 56% 96%; /* cream */
+    --foreground: 0 0% 18%; /* dark charcoal text */
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 18%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 18%;
+
+    --primary: 45 92% 72%; /* golden yellow */
+    --primary-foreground: 0 0% 18%;
+
+    --secondary: 200 58% 68%; /* sky blue */
+    --secondary-foreground: 0 0% 18%;
+
+    --muted: 0 0% 92%; /* light gray */
+    --muted-foreground: 0 0% 40%;
+
+    --accent: 185 77% 83%; /* light cyan */
+    --accent-foreground: 0 0% 18%;
+
+    --destructive: 359 81% 64%; /* soft red */
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 83%; /* medium gray */
+    --input: 0 0% 83%;
+    --ring: 45 92% 72%; /* golden yellow ring focus */
+
+    --radius: 0.5rem;
+  }
+
+  
+    .dark {
+      --background: 240 10% 10%;         /* very dark slate */
+      --foreground: 0 0% 90%;            /* light text */
+    
+      --card: 240 10% 12%;
+      --card-foreground: 0 0% 90%;
+    
+      --popover: 240 10% 12%;
+      --popover-foreground: 0 0% 90%;
+    
+      --primary: 45 92% 72%;             /* golden yellow */
+      --primary-foreground: 240 10% 10%; /* dark background for contrast */
+    
+      --secondary: 200 58% 68%;          /* sky blue */
+      --secondary-foreground: 240 10% 10%;
+    
+      --muted: 240 10% 20%;
+      --muted-foreground: 0 0% 60%;
+    
+      --accent: 185 77% 83%;             /* light cyan */
+      --accent-foreground: 240 10% 10%;
+    
+      --destructive: 359 81% 64%;        /* soft red */
+      --destructive-foreground: 0 0% 100%;
+    
+      --border: 240 10% 25%;
+      --input: 240 10% 25%;
+      --ring: 45 92% 72%;                /* golden yellow ring */
+    
+      --radius: 0.5rem;
+    }
+    
+  
+
+  .cupcake {
+    /* Cupcake theme variables (pastel colors) */
+    --background: 300 100% 98%;
+    --foreground: 280 30% 20%;
+
+    --card: 300 30% 96%;
+    --card-foreground: 280 30% 20%;
+
+    --popover: 300 30% 96%;
+    --popover-foreground: 280 30% 20%;
+
+    --primary: 330 80% 75%;
+    --primary-foreground: 330 20% 20%;
+
+    --secondary: 180 30% 85%;
+    --secondary-foreground: 180 20% 20%;
+
+    --muted: 300 20% 90%;
+    --muted-foreground: 280 10% 40%;
+
+    --accent: 50 80% 80%;
+    --accent-foreground: 40 40% 20%;
+
+    --destructive: 0 70% 65%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 280 15% 85%;
+    --input: 280 15% 85%;
+    --ring: 330 80% 75%;
+
+    --radius: 1rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.test-status-passed {
+  @apply text-green-500 font-medium;
+}
+
+.test-status-failed {
+  @apply text-red-500 font-medium;
+}
+
+.test-status-pending {
+  @apply text-amber-500 font-medium;
+}
+
+.test-status-blocked {
+  @apply text-gray-500 font-medium;
+}
