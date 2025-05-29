@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Input } from '@/components/ui/input';
 import { Plus, Search } from 'lucide-react';
 import TestCaseList from '@/components/test-cases/TestCaseList';
@@ -26,6 +27,7 @@ const TestCases = () => {
   const [testSuites, setTestSuites] = useState<TestSuite[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
   
   useEffect(() => {
     // In a real application, you would fetch test cases from your API
@@ -39,7 +41,7 @@ const TestCases = () => {
     setModules(mockModules);
     setTestSuites(mockTestSuites);
     setLoading(false);
-  }, [projectId]);
+  }, [projectId, refreshKey]);
 
   // Filter test cases based on search query
   useEffect(() => {
@@ -57,36 +59,13 @@ const TestCases = () => {
     setFilteredTestCases(filtered);
   }, [searchQuery, testCases]);
   
-  const handleCreateTestCase = (data: any) => {
-    // Generate a unique test case ID
-    const testCaseId = `TC-${String(Math.floor(1000 + Math.random() * 9000)).padStart(4, '0')}`;
-    
-    const newTestCase: TestCase = {
-      _id: `tc-${Date.now()}`,
-      testCaseId: testCaseId,
-      projectId: data.projectId,
-      moduleId: data.moduleId || '',
-      testSuiteId: data.testSuiteId || '',
-      title: data.title,
-      description: data.description,
-      priority: data.priority,
-      type: data.type,
-      preconditions: data.preconditions,
-      steps: data.steps,
-      expectedResults: data.expectedResults,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    
-    const updatedTestCases = [...testCases, newTestCase];
-    setTestCases(updatedTestCases);
-    setFilteredTestCases(updatedTestCases);
+  const handleFormSuccess = () => {
     setIsDialogOpen(false);
-    
     toast({
-      title: "Test Case Created",
-      description: "Your test case has been created successfully.",
+      title: "Success",
+      description: "Test case operation completed.",
     });
+    setRefreshKey(prevKey => prevKey + 1);
   };
   
   const handleDeleteTestCase = (testCaseId: string) => {
@@ -115,6 +94,10 @@ const TestCases = () => {
     // Logic to copy test case to a different test suite
     console.log(`Copy test case ${testCaseId} to test suite ${targetTestSuiteId}`);
   };
+
+  const selectedModuleId = modules.length > 0 ? modules[0]._id : undefined;
+  const selectedTestSuiteId = testSuites.length > 0 ? testSuites[0]._id : undefined;
+  const canCreateTestCase = modules.length > 0 && testSuites.length > 0;
   
   return (
     <MainLayout>
@@ -123,18 +106,37 @@ const TestCases = () => {
           <h1 className="text-2xl font-bold">Test Cases</h1>
           
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button>
-                <Plus className="h-4 w-4 mr-2" />
-                Create Test Case
-              </Button>
-            </DialogTrigger>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div // Wrapper div for Tooltip when button is disabled
+                    className={!canCreateTestCase ? 'cursor-not-allowed' : ''}
+                    tabIndex={!canCreateTestCase ? 0 : undefined} // Make it focusable for accessibility
+                  >
+                    <Button disabled={!canCreateTestCase} onClick={() => setIsDialogOpen(true)}>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Create Test Case
+                    </Button>
+                  </div>
+                </TooltipTrigger>
+                {!canCreateTestCase && (
+                  <TooltipContent>
+                    <p>Please create at least one module and one test suite before creating a test case.</p>
+                  </TooltipContent>
+                )}
+              </Tooltip>
+            </TooltipProvider>
             <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>Create New Test Case</DialogTitle>
               </DialogHeader>
               <div className="mt-4">
-                <TestCaseForm />
+                <TestCaseForm 
+                  projectId={projectId}
+                  moduleId={selectedModuleId}
+                  testSuiteId={selectedTestSuiteId}
+                  onSuccess={handleFormSuccess} 
+                />
               </div>
             </DialogContent>
           </Dialog>

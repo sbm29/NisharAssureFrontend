@@ -12,8 +12,25 @@ import { Textarea } from '@/components/ui/textarea';
 import { ArrowLeft, Folder, FileText, File, Plus, Edit, Trash2 } from 'lucide-react';
 import { mockProjects } from '@/data/mockData';
 
-// Mock data for modules and test suites
-const mockModules = [
+// Define types for inline mock data (or import from a types file if available)
+interface InlineModule {
+  id: string;
+  name: string;
+  description: string;
+  projectId: string;
+}
+
+interface InlineTestSuite {
+  id: string;
+  name: string;
+  description: string;
+  moduleId: string;
+  projectId: string;
+}
+
+// Mock data for modules and test suites - Original data commented out
+/*
+const mockModulesOriginal = [
   {
     id: 'mod1',
     name: 'Authentication Module',
@@ -27,8 +44,11 @@ const mockModules = [
     projectId: 'project1'
   }
 ];
+*/
+const mockModules: InlineModule[] = [];
 
-const mockTestSuites = [
+/*
+const mockTestSuitesOriginal = [
   {
     id: 'ts1',
     name: 'Login Suite',
@@ -51,6 +71,8 @@ const mockTestSuites = [
     projectId: 'project1'
   }
 ];
+*/
+const mockTestSuites: InlineTestSuite[] = [];
 
 const ProjectStructure = () => {
   const { id } = useParams<{ id: string }>();

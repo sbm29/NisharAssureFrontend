@@ -35,15 +35,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     const fetchUser = async () => {
       const token = localStorage.getItem("auth_token");
-      if (!token) return;
+      if (!token) {
+        setLoading(false); // Ensure loading is false if no token
+        return;
+      }
 
       try {
-        const res = await axios.get<User>("/api/auth/me");
+        const res = await axios.get<User>(`${BaseURL}/api/auth/me`);
         setUser(res.data);
         setIsAuthenticated(true);
-        setLoading(false);
       } catch (err) {
         logout(); // Invalid token
+      } finally {
         setLoading(false);
       }
     };

@@ -46,7 +46,7 @@ const App = () => (
               
               {/* Application Routes - Protected */}
               
-              <Route path="/" element={<Dashboard />} />
+              <Route path="/" element={<ProtectedRoute children={<Dashboard />} />} />
               <Route path="/projects" element={<ProtectedRoute children={<Projects />} />} />
               <Route path="/projects/:projectId" element={<ProtectedRoute children={<ProjectDetail />} />} />
               <Route path="/projects/:id/dashboard" element={<ProtectedRoute children={<ProjectDashboard />} />} />

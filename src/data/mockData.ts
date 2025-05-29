@@ -1,9 +1,12 @@
 
+// Mock data has been intentionally commented out as per request.
 import { Project } from '@/types/project';
 import { TestCase, TestExecution } from '@/types/testCase';
 import { Module, TestSuite } from '@/types/projectStructure';
 
 // Mock Projects
+export const mockProjects: Project[] = []; // Original data commented out below
+/*
 export const mockProjects: Project[] = [
   {
     id: '1',
@@ -71,8 +74,11 @@ export const mockProjects: Project[] = [
     updatedAt: new Date('2024-03-28'),
   },
 ];
+*/
 
 // Mock Modules
+export const mockModules: Module[] = []; // Original data commented out below
+/*
 export const mockModules: Module[] = [
   {
     id: 'mod1',
@@ -99,8 +105,11 @@ export const mockModules: Module[] = [
     updatedAt: new Date('2024-03-20'),
   }
 ];
+*/
 
 // Mock Test Suites
+export const mockTestSuites: TestSuite[] = []; // Original data commented out below
+/*
 export const mockTestSuites: TestSuite[] = [
   {
     id: 'ts1',
@@ -135,8 +144,11 @@ export const mockTestSuites: TestSuite[] = [
     updatedAt: new Date('2024-03-20'),
   }
 ];
+*/
 
 // Mock Test Cases
+export const mockTestCases: TestCase[] = []; // Original data commented out below
+/*
 export const mockTestCases: TestCase[] = [
   {
     id: '1',
@@ -217,8 +229,11 @@ export const mockTestCases: TestCase[] = [
     updatedAt: new Date('2024-03-18'),
   },
 ];
+*/
 
 // Mock Test Executions
+export const mockTestExecutions: TestExecution[] = []; // Original data commented out below
+/*
 export const mockTestExecutions: TestExecution[] = [
   {
     id: '1',
@@ -254,23 +269,32 @@ export const mockTestExecutions: TestExecution[] = [
     executedAt: new Date('2024-03-20'),
   },
 ];
+*/
 
 // Dashboard Statistics
 export const dashboardStats = {
-  totalProjects: mockProjects.length,
-  activeProjects: mockProjects.filter(p => p.status === 'Active').length,
-  totalTestCases: mockTestCases.length,
+  totalProjects: 0, // mockProjects.length,
+  activeProjects: 0, // mockProjects.filter(p => p.status === 'Active').length,
+  totalTestCases: 0, // mockTestCases.length,
+  testCasesByStatus: [],
+  /*
   testCasesByStatus: [
     { name: 'Passed', value: 3, color: '#22c55e' },
     { name: 'Failed', value: 1, color: '#ef4444' },
     { name: 'Pending', value: 1, color: '#f59e0b' },
   ],
+  */
+  testCasesByPriority: [],
+  /*
   testCasesByPriority: [
     { name: 'Critical', value: 2, color: '#dc2626' },
     { name: 'High', value: 2, color: '#f97316' },
     { name: 'Medium', value: 1, color: '#22d3ee' },
     { name: 'Low', value: 0, color: '#60a5fa' },
   ],
+  */
+  recentActivity: [],
+  /*
   recentActivity: [
     { 
       id: '1', 
@@ -294,4 +318,5 @@ export const dashboardStats = {
       timestamp: new Date('2024-04-14') 
     },
   ]
+  */
 };
