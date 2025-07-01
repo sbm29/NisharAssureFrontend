@@ -52,8 +52,8 @@ const ImportTestCases = ({ projectId, moduleId, testSuiteId, onImportSuccess }: 
       const enrichedTestCases = testCases.map(testCase => ({
         ...testCase,
         projectId,
-        moduleId: testCase.moduleId || moduleId,
-        testSuiteId: testCase.testSuiteId || testSuiteId
+        moduleId: testCase.module || moduleId,
+        testSuiteId: testCase.testSuite || testSuiteId
       }));
 
       console.log('Importing test cases:', enrichedTestCases);

@@ -1,12 +1,11 @@
-
-import React, { useState } from 'react';
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import React, { useState } from "react";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Form,
   FormControl,
@@ -14,142 +13,96 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
+} from "@/components/ui/form";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { useToast } from '@/hooks/use-toast';
-import { TestCase } from '@/types/testCase';
-import { useIsMobile } from '@/hooks/use-mobile';
-import { useAddTestCase } from '@/hooks/testcases/useAddTestCases';
-import { useUpdateTestCase } from '@/hooks/testcases/useUpdateTestCase';
+} from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
+import { TestCase } from "@/types/testCase";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { useAddTestCase } from "@/hooks/testcases/useAddTestCases";
+import { useUpdateTestCase } from "@/hooks/testcases/useUpdateTestCase";
 
 const testCaseSchema = z.object({
-  _id: z.string(),
-  title: z.string().min(5, { message: 'Title must be at least 5 characters.' }),
-  description: z.string().min(10, { message: 'Description must be at least 10 characters.' }),
-  priority: z.enum(['Low', 'Medium', 'High', 'Critical']),
-  type: z.enum(['Functional', 'Performance', 'Security', 'Usability', 'Compatibility', 'Other']),
+  _id: z.string().optional(),
+  title: z.string().min(5, { message: "Title must be at least 5 characters." }),
+  description: z
+    .string()
+    .min(10, { message: "Description must be at least 10 characters." }),
+  priority: z.enum(["Low", "Medium", "High", "Critical"]),
+  type: z.enum([
+    "Functional",
+    "Performance",
+    "Security",
+    "Usability",
+    "Compatibility",
+    "Other",
+  ]),
   preconditions: z.string().optional(),
-  steps: z.string().min(10, { message: 'Test steps are required.' }),
-  expectedResults: z.string().min(5, { message: 'Expected results are required.' }),
-  //testSuiteId: z.string(),
-  //moduleId: z.string(),
-  createdBy: z.string().optional()
+  steps: z.string().min(10, { message: "Test steps are required." }),
+  expectedResults: z
+    .string()
+    .min(5, { message: "Expected results are required." }),
+  testSuite: z.string(),
+  project: z.string().optional(), // Assuming projectId is passed as prop
+  createdBy: z.string().optional(),
 });
 
 type TestCaseFormValues = z.infer<typeof testCaseSchema>;
 
 interface TestCaseFormProps {
-  //onSubmit: (data: TestCaseFormValues) => void;
   _id?: string;
   defaultValues?: Partial<TestCaseFormValues>;
   isEditing?: boolean;
-  projectId?: string;
+  projectId: string; // Project ID is required for creating/updating test cases
   testSuiteId?: string;
-  moduleId?: string;
-  onSuccess?: () => void;  // Add this line
-} 
+
+  onSuccess?: () => void;
+}
 
 const TestCaseForm: React.FC<TestCaseFormProps> = ({
-  //onSubmit,
   _id,
   defaultValues,
-  isEditing = false,
+  isEditing,
   projectId,
   testSuiteId,
-  moduleId,
-  onSuccess}) => {
+
+  onSuccess,
+}) => {
   const { toast } = useToast();
   const isMobile = useIsMobile();
   const [activeTab, setActiveTab] = useState("details");
-  
+
   const form = useForm<TestCaseFormValues>({
     resolver: zodResolver(testCaseSchema),
     defaultValues: {
-      _id: defaultValues?._id || '',
-      title: defaultValues?.title || '',
-      description: defaultValues?.description || '',
-      priority: defaultValues?.priority || 'Medium',
-      type: defaultValues?.type || 'Functional',
-      preconditions: defaultValues?.preconditions || '',
-      steps: defaultValues?.steps || '',
-      expectedResults: defaultValues?.expectedResults || '',
-      
-     
-    },  
+      _id: defaultValues?._id || "",
+      title: defaultValues?.title || "",
+      description: defaultValues?.description || "",
+      priority: defaultValues?.priority || "Medium",
+      type: defaultValues?.type || "Functional",
+      preconditions: defaultValues?.preconditions || "",
+      steps: defaultValues?.steps || "",
+      expectedResults: defaultValues?.expectedResults || "",
+      testSuite: testSuiteId || "",
+    },
   });
 
-  // const handleSubmit = (values: TestCaseFormValues) => {
-  //   onSubmit(values);
-  //   console.log("Test case created successfully", values);
-  //   form.reset();
-  //   if (onSuccess) {
-  //     onSuccess(); // Call the success callback
-  //   }
-  //   toast({
-  //     title: `Test case ${isEditing ? 'updated' : 'created'} successfully`,
-  //     description: `"${values.title}" has been ${isEditing ? 'updated' : 'created'}.`,
-  //   });
-  // };
+  const { isSubmitting } = form.formState;
 
-  const { mutateAsync: createTestCase,  } = useAddTestCase();
+  const { mutateAsync: createTestCase } = useAddTestCase();
   const { mutateAsync: updateTestCase } = useUpdateTestCase();
 
-  // const handleSubmit = async (data: TestCaseFormValues) => {
-  //   console.log("data", data)
-  //   console.log("testSuiteId", testSuiteId)
-  //   console.log("projectId", projectId)
-  //   console.log("moduleId", moduleId)
-  //   if (!projectId || !testSuiteId || !moduleId) {
-  //     toast({
-  //       title: "Error",
-  //       description: "Missing project or test suite ID",
-  //       variant: "destructive",
-  //     });
-  //     return;
-  //   }
-
-  //   try {
-  //     if (isEditing && defaultValues) {
-  //       // ✅ Update logic
-  //       await updateTestCase({
-  //         _id: _id,
-  //         updatedData: data,
-  //       });
-  //     }
-  //      else {
-  //       await createTestCase({
-  //       ...data,
-  //       project : projectId,
-  //       testSuite : testSuiteId,
-  //       module : moduleId,
-     
-  //       });
-
-  //      form.reset();
-  //     toast({
-  //       title: `Test case ${isEditing ? 'updated' : 'created'} successfully`,
-  //       description: `"${data.title}" has been ${isEditing ? 'updated' : 'created'}.`,
-  //     });
-
-  //     if (onSuccess) onSuccess();
-
-  //   } catch (error) {
-  //     toast({
-  //       title: "Error creating test case",
-  //       description: (error as Error).message || "Something went wrong",
-  //       variant: "destructive",
-  //     });
-  //   }
-  // };
-
+  //console.log("testSuiteId", testSuiteId);
+  
   const handleSubmit = async (data: TestCaseFormValues) => {
-    if (!projectId || !testSuiteId || !moduleId) {
+    console.log("Test Case data", data);
+
+    if (!testSuiteId) {
       toast({
         title: "Error",
         description: "Missing project, test suite, or module ID",
@@ -157,19 +110,18 @@ const TestCaseForm: React.FC<TestCaseFormProps> = ({
       });
       return;
     }
-  
+
     try {
-      console.log("isEditing", isEditing)
-      console.log("defaultValues", defaultValues)
-      console.log("_id", _id)
-      if (isEditing && defaultValues?._id) {
+      console.log("defaultValues", defaultValues);
+      console.log("_id", _id);
+      if (isEditing && defaultValues._id) {
         // ✅ Update logic
-        console.log("Update logic")
+        console.log("Update logic");
         await updateTestCase({
           _id: defaultValues._id,
           project: projectId,
           testSuite: testSuiteId,
-          module: moduleId,
+
           ...data,
         });
       } else {
@@ -177,24 +129,21 @@ const TestCaseForm: React.FC<TestCaseFormProps> = ({
         await createTestCase({
           ...data,
           project: projectId,
-          testSuite: testSuiteId,
-          module: moduleId,
+          testSuite: data.testSuite || testSuiteId,
         });
         form.reset();
+        if (onSuccess) onSuccess();
       }
-  
-      
-  
+
       toast({
-        title: `Test case ${isEditing ? 'updated' : 'created'} successfully`,
-        description: `"${data.title}" has been ${isEditing ? 'updated' : 'created'}.`,
+        title: `Test case ${isEditing ? "updated" : "created"} successfully`,
+        description: `"${data.title}" has been ${
+          isEditing ? "updated" : "created"
+        }.`,
       });
-  
-      if (onSuccess) onSuccess();
-  
     } catch (error) {
       toast({
-        title: `Error ${isEditing ? 'updating' : 'creating'} test case`,
+        title: `Error ${isEditing ? "updating" : "creating"} test case`,
         description: (error as Error).message || "Something went wrong",
         variant: "destructive",
       });
@@ -204,11 +153,13 @@ const TestCaseForm: React.FC<TestCaseFormProps> = ({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className={`${isMobile ? "grid grid-cols-2" : ""} w-full md:w-auto`}>
+          <TabsList
+            className={`${isMobile ? "grid grid-cols-2" : ""} w-full md:w-auto`}
+          >
             <TabsTrigger value="details">Details</TabsTrigger>
             <TabsTrigger value="steps">Steps & Expected Results</TabsTrigger>
           </TabsList>
-          
+
           <TabsContent value="details" className="space-y-6 pt-4">
             <FormField
               control={form.control}
@@ -223,7 +174,7 @@ const TestCaseForm: React.FC<TestCaseFormProps> = ({
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="description"
@@ -231,17 +182,17 @@ const TestCaseForm: React.FC<TestCaseFormProps> = ({
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Textarea 
-                      placeholder="Enter test case description" 
+                    <Textarea
+                      placeholder="Enter test case description"
                       className="min-h-20"
-                      {...field} 
+                      {...field}
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
@@ -249,8 +200,8 @@ const TestCaseForm: React.FC<TestCaseFormProps> = ({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Priority</FormLabel>
-                    <Select 
-                      onValueChange={field.onChange} 
+                    <Select
+                      onValueChange={field.onChange}
                       defaultValue={field.value}
                     >
                       <FormControl>
@@ -269,15 +220,15 @@ const TestCaseForm: React.FC<TestCaseFormProps> = ({
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="type"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Type</FormLabel>
-                    <Select 
-                      onValueChange={field.onChange} 
+                    <Select
+                      onValueChange={field.onChange}
                       defaultValue={field.value}
                     >
                       <FormControl>
@@ -290,7 +241,9 @@ const TestCaseForm: React.FC<TestCaseFormProps> = ({
                         <SelectItem value="Performance">Performance</SelectItem>
                         <SelectItem value="Security">Security</SelectItem>
                         <SelectItem value="Usability">Usability</SelectItem>
-                        <SelectItem value="Compatibility">Compatibility</SelectItem>
+                        <SelectItem value="Compatibility">
+                          Compatibility
+                        </SelectItem>
                         <SelectItem value="Other">Other</SelectItem>
                       </SelectContent>
                     </Select>
@@ -299,7 +252,7 @@ const TestCaseForm: React.FC<TestCaseFormProps> = ({
                 )}
               />
             </div>
-            
+
             <FormField
               control={form.control}
               name="preconditions"
@@ -307,17 +260,17 @@ const TestCaseForm: React.FC<TestCaseFormProps> = ({
                 <FormItem>
                   <FormLabel>Preconditions</FormLabel>
                   <FormControl>
-                    <Textarea 
-                      placeholder="Enter test case preconditions (optional)" 
+                    <Textarea
+                      placeholder="Enter test case preconditions (optional)"
                       className="min-h-20"
-                      {...field} 
+                      {...field}
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            
+
             <div className="flex justify-between">
               <Button type="button" variant="outline">
                 Cancel
@@ -327,7 +280,7 @@ const TestCaseForm: React.FC<TestCaseFormProps> = ({
               </Button>
             </div>
           </TabsContent>
-          
+
           <TabsContent value="steps" className="space-y-6 pt-4">
             <FormField
               control={form.control}
@@ -336,17 +289,17 @@ const TestCaseForm: React.FC<TestCaseFormProps> = ({
                 <FormItem>
                   <FormLabel>Test Steps</FormLabel>
                   <FormControl>
-                    <Textarea 
-                      placeholder="Enter detailed test steps" 
+                    <Textarea
+                      placeholder="Enter detailed test steps"
                       className="min-h-40"
-                      {...field} 
+                      {...field}
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="expectedResults"
@@ -354,27 +307,31 @@ const TestCaseForm: React.FC<TestCaseFormProps> = ({
                 <FormItem>
                   <FormLabel>Expected Results</FormLabel>
                   <FormControl>
-                    <Textarea 
-                      placeholder="Enter expected results" 
+                    <Textarea
+                      placeholder="Enter expected results"
                       className="min-h-24"
-                      {...field} 
+                      {...field}
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            
+
             <div className="flex justify-between">
-              <Button 
-                type="button" 
-                variant="outline" 
+              <Button
+                type="button"
+                variant="outline"
                 onClick={() => setActiveTab("details")}
               >
                 Back
               </Button>
-              <Button type="submit" >
-                {isEditing ? 'Update Test Case' : 'Create Test Case'}
+              <Button type="submit">
+                {isSubmitting
+                  ? "Submitting..."
+                  : isEditing
+                  ? "Update Test Case"
+                  : "Create Test Case"}
               </Button>
             </div>
           </TabsContent>

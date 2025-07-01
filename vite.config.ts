@@ -9,6 +9,10 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
+  build: {
+    minify: 'terser', // 'esbuild' is faster, but 'terser' is better for obfuscation
+    sourcemap: false, // prevent browser from mapping to source code
+  },
   plugins: [
     react(),
     mode === 'development' &&

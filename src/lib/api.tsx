@@ -1,9 +1,15 @@
 import axios from "axios";
 import { BaseURL } from "./config";
+import { TestCase } from "@/types/testCase";
 
 export const fetchProject = async (projectId: string) => {
   const res = await axios.get(`${BaseURL}/api/projects/project/${projectId}`);
   return res.data;
+};
+
+export const fetchAllProjects = async () => {
+  const response = await axios.get(`${BaseURL}/api/projects/allprojects`);
+  return response.data;
 };
 
 export const fetchModules = async (projectId: string) => {
@@ -32,7 +38,7 @@ export const fetchAllTestSuites = async () => {
 
 export const fetchAllTestCasesForProject = async (projectId: string) => {
   const response = await axios.get(`${BaseURL}/api/projects/${projectId}/testcases`);
-  console.log("TestCases from API ", response.data);
+  console.log("TESTCASES  API ", response.data);
   return response.data;
 };
 
@@ -40,3 +46,10 @@ export const getTestCaseById = async (id: string) => {
   const response = await axios.get(`${BaseURL}/api/testcases/${id}`);
   return response.data;
 };
+
+export const fetchAllTestCases  = async () => {
+  const response = await axios.get(`${BaseURL}/api/testcases/getAllTestCases`); 
+  return response.data;
+};
+
+

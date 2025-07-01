@@ -23,7 +23,7 @@ export const useCreateTestSuite = () => {
 
       onSuccess: (_, variables) => {
         toast({ title: "Test suite created successfully." });
-        queryClient.invalidateQueries({ queryKey: ["testsuites", variables.module] });
+        queryClient.invalidateQueries({ queryKey: ["testSuites"] });
       },
 
     onError: (error : any) => {

@@ -15,11 +15,14 @@ type testSuiteId =  {
     name: string;
 }
 
+
+
+
 export interface TestCase {
   _id: string;
   testCaseId?: string;
-  projectId: string;
-  moduleId: string;
+  project: string;
+  module: string;
   testSuite: testSuiteId;
   title: string;
   description: string;

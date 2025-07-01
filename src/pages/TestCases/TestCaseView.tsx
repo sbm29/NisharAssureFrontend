@@ -22,7 +22,7 @@ const TestCaseView: React.FC<TestCaseViewProps> = ({ isEditing = false }) => {
  // const testCase = mockTestCases.find(tc => tc.id === id);
 
   const { data: testCase, isLoading, error } = useTestCaseById(id || '');
-  console.log( "TestCaseVIEW",testCase);
+  //console.log( "TestCaseVIEW",testCase);
 
   const { mutate: updateTestCase, isPending } = useUpdateTestCase();
 
@@ -127,7 +127,7 @@ const TestCaseView: React.FC<TestCaseViewProps> = ({ isEditing = false }) => {
                 isEditing={true}
                 projectId={testCase.project}
                 testSuiteId={testCase.testSuite}
-                moduleId={testCase.module}
+               // moduleId={testCase.module}
                 onSuccess={() => navigate(`/test-cases/${id}`)}
               />
             </CardContent>

@@ -34,8 +34,10 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import ModuleForm from "./ModuleForm";
 import TestSuiteForm from "./TestSuiteForm";
-import { toast } from "@/hooks/use-toast";
-import { useCreateTestSuite } from "@/hooks/testsuites/useCreateTestSuites";
+import TestSuiteList from "./TestSuiteList";
+import { useMoveTestSuite } from "@/hooks/testsuites/useMoveTestSuite";
+import { useCopyTestSuite } from "@/hooks/testsuites/useCopyTestSuite";
+import MoveTestSuiteDialog from "@/components/projects/MoveTestSuiteDialog";
 
 interface ProjectModulesProps {
   projectId: string;
@@ -63,7 +65,7 @@ const ProjectModules: React.FC<ProjectModulesProps> = ({
   testCases,
   activeModuleId,
   activeTestSuiteId,
-  onModuleCreate,
+
   onModuleDelete,
   onTestSuiteCreate,
   onTestSuiteDelete,
@@ -79,10 +81,11 @@ const ProjectModules: React.FC<ProjectModulesProps> = ({
   const [isAddTestSuiteDialogOpen, setIsAddTestSuiteDialogOpen] =
     useState(false);
   const [currentModuleId, setCurrentModuleId] = useState<string | null>(null);
-  const createTestSuite = useCreateTestSuite();
-
-  console.log("Test Suite fetched at project MODULE Page", testSuites);
-
+  const [moveSuiteDialogOpen, setMoveSuiteDialogOpen] = useState(false);
+  const [copySuiteDialogOpen, setCopySuiteDialogOpen] = useState(false);
+  const [actionTargetSuite, setActionTargetSuite] = useState<TestSuite | null>(
+    null
+  );
   const toggleModule = (moduleId: string) => {
     setOpenModules((prev) => ({
       ...prev,
@@ -90,9 +93,20 @@ const ProjectModules: React.FC<ProjectModulesProps> = ({
     }));
   };
 
-  console.log("modules from project", modules);
-  const handleAddModule = (data: any) => {
-    //onModuleCreate(data);
+  const { mutate: moveTestSuite } = useMoveTestSuite();
+  const { mutate: copyTestSuite } = useCopyTestSuite();
+
+  const handleMoveSuiteClick = (suite: TestSuite) => {
+    setActionTargetSuite(suite);
+    setMoveSuiteDialogOpen(true);
+  };
+
+  const handleCopySuiteClick = (suite: TestSuite) => {
+    setActionTargetSuite(suite);
+    setCopySuiteDialogOpen(true);
+  };
+
+  const handleAddModuleDialog = (data: any) => {
     setIsAddModuleDialogOpen(false);
   };
 
@@ -101,35 +115,11 @@ const ProjectModules: React.FC<ProjectModulesProps> = ({
     setIsAddTestSuiteDialogOpen(true);
   };
 
-  const handleAddTestSuite = (data: TestSuite) => {
-    if (currentModuleId) {
-      createTestSuite.mutate(
-        {
-          ...data,
-          module: currentModuleId,
-          project: projectId,
-        },
-        {
-          onSuccess: () => {
-            toast({ title: "Test suite created successfully" });
-            setIsAddTestSuiteDialogOpen(false);
-          },
-          onError: (error: any) => {
-            console.error("Test suite creation error:", error);
-            const message =
-              error?.response?.data?.message || "Failed to create test suite";
-            toast({ title: message, variant: "destructive" });
-          },
-        }
-      );
-    }
-  };
-
-  console.log("testSuites at project module page", testSuites);
+  console.log("TESTCASES AT PROJECT MODULE PAGE ", testCases);
 
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
+      <CardHeader className="flex flex-row items-center justify-between ">
         <CardTitle>Project Structure</CardTitle>
         <Dialog
           open={isAddModuleDialogOpen}
@@ -145,12 +135,15 @@ const ProjectModules: React.FC<ProjectModulesProps> = ({
             <DialogHeader>
               <DialogTitle>Create New Module</DialogTitle>
             </DialogHeader>
-            <ModuleForm projectId={projectId} onSuccess={handleAddModule} />
+            <ModuleForm
+              projectId={projectId}
+              onSuccess={handleAddModuleDialog}
+            />
           </DialogContent>
         </Dialog>
       </CardHeader>
       <CardContent>
-        <ScrollArea className="h-[400px] pr-4">
+        <ScrollArea className="h-[400px] pr-4   ">
           {!modules || modules.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
               <p>No modules found</p>
@@ -159,21 +152,20 @@ const ProjectModules: React.FC<ProjectModulesProps> = ({
               </p>
             </div>
           ) : (
-            <div className="space-y-2">
+            <div className="space-y-2  pr-1 w-full max-w-[410px]  ">
               {modules.length > 0 &&
                 modules?.map((module) => {
-                  console.log("module", module);
-                  console.log("testSuites at project module ", testSuites);
-                 
+                  //console.log("module", module);
+                  //console.log("testSuites at project module ", testSuites);
 
                   const moduleSuites = testSuites?.filter(
                     (suite) => suite.module && suite.module._id === module._id
                   );
 
-                  console.log(
-                    "moduleSuites after mapping module",
-                    moduleSuites
-                  );
+                  // console.log(
+                  //   "moduleSuites after mapping module",
+                  //   moduleSuites
+                  // );
                   const isOpen = openModules[module._id] || false;
 
                   return (
@@ -181,7 +173,7 @@ const ProjectModules: React.FC<ProjectModulesProps> = ({
                       key={module._id}
                       open={isOpen}
                       onOpenChange={() => toggleModule(module._id)}
-                      className={`border rounded-md ${
+                      className={`border rounded-md  ${
                         activeModuleId === module._id
                           ? "border-primary"
                           : "border-border"
@@ -249,12 +241,22 @@ const ProjectModules: React.FC<ProjectModulesProps> = ({
                             moduleSuites?.map((suite) => {
                               console.log("suite in the model suite ", suite);
                               console.log("testCases in the module", testCases);
- const testSuiteId =  testCases.map((tc) => console.log("TC",tc));
+                              // const testSuiteId = testCases.map((tc) =>
+                              //   console.log("TC", tc)
+                              // );
 
-                              const suiteTestCases = Array.isArray(testCases) ? testCases.filter(
-                                (tc) => tc.testSuite._id === suite._id
-                              ) : [];
-                              console.log("suiteTestCases in the module", suiteTestCases);
+                              const suiteTestCases = Array.isArray(testCases)
+                                ? testCases.filter((tc) =>
+                                    typeof tc.testSuite === "string"
+                                      ? tc.testSuite === suite._id
+                                      : tc.testSuite._id === suite._id
+                                  )
+                                : [];
+                              // console.log(
+                              //   "suiteTestCases in the module",
+                              //   suiteTestCases
+                              // );
+
                               return (
                                 <div
                                   key={suite._id}
@@ -290,11 +292,19 @@ const ProjectModules: React.FC<ProjectModulesProps> = ({
                                           <Edit className="h-4 w-4 mr-2" />
                                           Edit Test Suite
                                         </DropdownMenuItem>
-                                        <DropdownMenuItem>
+                                        <DropdownMenuItem
+                                          onSelect={() =>
+                                            handleMoveSuiteClick(suite)
+                                          }
+                                        >
                                           <Move className="h-4 w-4 mr-2" />
                                           Move to...
                                         </DropdownMenuItem>
-                                        <DropdownMenuItem>
+                                        <DropdownMenuItem
+                                          onSelect={() =>
+                                            handleCopySuiteClick(suite)
+                                          }
+                                        >
                                           <Copy className="h-4 w-4 mr-2" />
                                           Copy to...
                                         </DropdownMenuItem>
@@ -336,10 +346,39 @@ const ProjectModules: React.FC<ProjectModulesProps> = ({
           </DialogHeader>
           <TestSuiteForm
             moduleId={currentModuleId || ""}
-            onSubmit={handleAddTestSuite}
+            projectId={projectId}
           />
         </DialogContent>
       </Dialog>
+
+      {actionTargetSuite && (
+        <>
+          <MoveTestSuiteDialog
+            isOpen={moveSuiteDialogOpen}
+            onOpenChange={setMoveSuiteDialogOpen}
+            testSuite={actionTargetSuite}
+            modules={modules}
+            onMove={(testSuiteId, targetModuleId) => {
+              moveTestSuite({ testSuiteId, targetModuleId });
+              if (onMoveTestSuite) onMoveTestSuite(testSuiteId, targetModuleId);
+            }}
+            onCopy={() => {}}
+            isMove={true}
+          />
+          <MoveTestSuiteDialog
+            isOpen={copySuiteDialogOpen}
+            onOpenChange={setCopySuiteDialogOpen}
+            testSuite={actionTargetSuite}
+            modules={modules}
+            onMove={() => {}}
+            onCopy={(testSuiteId, targetModuleId) => {
+              copyTestSuite({ testSuiteId, targetModuleId });
+              if (onCopyTestSuite) onCopyTestSuite(testSuiteId, targetModuleId);
+            }}
+            isMove={false}
+          />
+        </>
+      )}
     </Card>
   );
 };

@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Plus, Search } from 'lucide-react';
-import TestCaseList from '@/components/test-cases/TestCaseList';
+import TestCaseList from '@/pages/ProjectsDetails/components/ProjectTestCases/TestCaseList';
 import TestCaseForm from '@/components/test-cases/TestCaseForm';
 import { TestCase } from '@/types/testCase';
 import { mockTestCases, mockModules, mockTestSuites } from '@/data/mockData';

@@ -12,6 +12,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { TestCase } from '@/types/testCase';
 import { useParams } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -20,24 +21,28 @@ import { Button } from '@/components/ui/button';
 import { CalendarIcon, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import { mockProjects, mockTestCases } from '@/data/mockData';
+//import { mockProjects, mockTestCases } from '@/data/mockData';
+import { useAllProjects } from '@/hooks/projects/useAllProjects';
+import { useAllTestCases } from '@/hooks/testcases/useAllTestCases';
 
 // Component for displaying project-specific dashboard with metrics and charts
 const ProjectDashboard = () => {
   const { id } = useParams<{ id: string }>();
   const [activeTab, setActiveTab] = useState('overview');
+  const { data: project } = useAllProjects();
+  const { data: testCases } = useAllTestCases();
   
   // Find the current project from mock data (in real app, would fetch from API)
-  const project = mockProjects.find(p => p.id === id);
+  //const project = mockProjects.find(p => p.id === id);
   
   // Get test cases for this project (in real app, would fetch from API)
-  const projectTestCases = mockTestCases.filter(tc => tc.projectId === id);
+  //const projectTestCases = project?.filter((tc: TestCase) => tc.project === id);
   
   // Calculate metrics for test case status
-  const totalTestCases = projectTestCases.length;
-  const passedTestCases = projectTestCases.filter(tc => tc.status === 'Passed').length;
-  const failedTestCases = projectTestCases.filter(tc => tc.status === 'Failed').length;
-  const blockedTestCases = projectTestCases.filter(tc => tc.status === 'Blocked').length;
+  const totalTestCases = testCases?.length;
+  const passedTestCases = testCases?.filter(tc => tc.status === 'Passed').length;
+  const failedTestCases = testCases?.filter(tc => tc.status === 'Failed').length;
+  const blockedTestCases = testCases?.filter(tc => tc.status === 'Blocked').length;
   const pendingTestCases = totalTestCases - passedTestCases - failedTestCases - blockedTestCases;
   
   // Calculate pass rate percentage for metrics

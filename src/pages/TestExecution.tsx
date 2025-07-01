@@ -27,6 +27,8 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useToast } from '@/hooks/use-toast';
+import { useAllProjects } from '@/hooks/projects/useAllProjects';
+import { useAllTestCases } from '@/hooks/testcases/useAllTestCases';
 
 /**
  * TestExecution component handles the workflow for executing test cases within test runs
@@ -59,9 +61,15 @@ const TestExecution = () => {
   // Initialize toast for notifications
   const { toast } = useToast();
 
+  const { data: project } = useAllProjects();
+  const { data: testCases } = useAllTestCases();
+
+  console.log("Projects at execution page",project);
+  console.log("TestCases at execution page",testCases);
+
   // Get project modules and test suites if a project is selected
-  const modules = id ? mockModules.filter(m => m.projectId === id) : [];
-  const testSuites = mockTestSuites;
+  const modules = id ? project?.filter((m: any) => m.projectId === id) : [];
+  const testSuites = testCases?.filter((ts: any) => ts.projectId === id);
   
   // If there's no ID, show a project selection screen
   if (!id) {
@@ -79,17 +87,21 @@ const TestExecution = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {mockProjects.map((project) => (
-                  <div key={project.id} className="flex items-center justify-between border-b border-border pb-3">
-                    <div>
-                      <h3 className="font-medium">{project.name}</h3>
-                      <p className="text-sm text-muted-foreground">{project.testCaseCount} test cases</p>
+                {project?.map((project) => {
+                   const count = testCases.filter((tc: any) => tc.project.id === project.id).length;
+                   return (
+                    <div key={project.id} className="flex items-center justify-between border-b border-border pb-3">
+                      <div>
+                        <h3 className="font-medium">{project.name}</h3>
+                        <p className="text-sm text-muted-foreground">{count} test cases</p>
+                      </div>
+                      <Link to={`/test-execution/${project.id}`}>
+                        <Button>Execute Tests</Button>
+                      </Link>
                     </div>
-                    <Link to={`/test-execution/${project.id}`}>
-                      <Button>Execute Tests</Button>
-                    </Link>
-                  </div>
-                ))}
+                  )
+
+                } )}
               </div>
             </CardContent>
           </Card>
@@ -99,11 +111,11 @@ const TestExecution = () => {
   }
 
   // If ID is provided, show the test execution screen for that project
-  const project = mockProjects.find(p => p.id === id);
-  const projectTestCases = mockTestCases.filter(tc => tc.projectId === id);
+  const projectwithId = project?.find((p: any) => p.id === id);
+  const projectTestCases = testCases?.filter((tc: any) => tc.project.id === id);
 
   // Handle project not found
-  if (!project) {
+  if (!projectwithId) {
     return (
       <MainLayout>
         <div className="text-center py-16">

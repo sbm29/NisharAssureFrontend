@@ -36,9 +36,9 @@ const MoveTestSuiteDialog: React.FC<MoveTestSuiteDialogProps> = ({
   const handleSubmit = () => {
     if (selectedModuleId) {
       if (isMove) {
-        onMove(testSuite.id, selectedModuleId);
+        onMove(testSuite._id, selectedModuleId);
       } else {
-        onCopy(testSuite.id, selectedModuleId);
+        onCopy(testSuite._id, selectedModuleId);
       }
       onOpenChange(false);
     }
@@ -71,9 +71,9 @@ const MoveTestSuiteDialog: React.FC<MoveTestSuiteDialogProps> = ({
               </SelectTrigger>
               <SelectContent>
                 {modules
-                  .filter(module => module.id !== testSuite.moduleId)
+                  .filter(module => module._id !== testSuite.module._id)
                   .map(module => (
-                    <SelectItem key={module.id} value={module.id}>
+                    <SelectItem key={module._id} value={module._id}>
                       {module.name}
                     </SelectItem>
                   ))

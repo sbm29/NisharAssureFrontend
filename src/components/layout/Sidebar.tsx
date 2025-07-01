@@ -74,6 +74,12 @@ const Sidebar = () => {
       icon: Users,
       allowedRoles: ['admin'] as UserRole[]
     },
+    { 
+      name: 'Release Notes', 
+      path: '/release-notes', 
+      icon: Users,
+      allowedRoles: ['admin', 'test_manager', 'test_engineer'] as UserRole[]
+    },
    
   ];
 
@@ -93,7 +99,7 @@ const Sidebar = () => {
       <div className="flex items-center justify-between p-4 border-b border-border">
         {!collapsed && (
           <Link to="/" className="flex items-center">
-            <span className="font-bold text-xl text-primary">Nishar Assure</span>
+            <span className="font-bold text-xl text-primary">Nishar Assure (Beta)</span>
           </Link>
         )}
         <Button 

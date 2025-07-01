@@ -75,7 +75,7 @@ export const mockProjects: Project[] = [
 // Mock Modules
 export const mockModules: Module[] = [
   {
-    id: 'mod1',
+    _id: 'mod1',
     projectId: '1',
     name: 'Authentication',
     description: 'User authentication features',
@@ -83,7 +83,7 @@ export const mockModules: Module[] = [
     updatedAt: new Date('2024-04-12'),
   },
   {
-    id: 'mod2',
+    _id: 'mod2',
     projectId: '1',
     name: 'Payment Processing',
     description: 'Payment gateway and transaction features',
@@ -91,7 +91,7 @@ export const mockModules: Module[] = [
     updatedAt: new Date('2024-04-14'),
   },
   {
-    id: 'mod3',
+    _id: 'mod3',
     projectId: '2',
     name: 'User Account',
     description: 'User account management features',
@@ -103,7 +103,7 @@ export const mockModules: Module[] = [
 // Mock Test Suites
 export const mockTestSuites: TestSuite[] = [
   {
-    id: 'ts1',
+    _id: 'ts1',
     moduleId: 'mod1',
     name: 'Registration Tests',
     description: 'Tests for user registration functionality',
@@ -111,7 +111,7 @@ export const mockTestSuites: TestSuite[] = [
     updatedAt: new Date('2024-04-12'),
   },
   {
-    id: 'ts2',
+    _id: 'ts2',
     moduleId: 'mod1',
     name: 'Login Tests',
     description: 'Tests for user login functionality',
@@ -119,7 +119,7 @@ export const mockTestSuites: TestSuite[] = [
     updatedAt: new Date('2024-04-13'),
   },
   {
-    id: 'ts3',
+    _id: 'ts3',
     moduleId: 'mod2',
     name: 'Credit Card Processing',
     description: 'Tests for credit card processing',
@@ -127,7 +127,7 @@ export const mockTestSuites: TestSuite[] = [
     updatedAt: new Date('2024-04-15'),
   },
   {
-    id: 'ts4',
+    _id: 'ts4',
     moduleId: 'mod3',
     name: 'Fund Transfer',
     description: 'Tests for fund transfer functionality',
@@ -139,7 +139,7 @@ export const mockTestSuites: TestSuite[] = [
 // Mock Test Cases
 export const mockTestCases: TestCase[] = [
   {
-    id: '1',
+    _id: '1',
     projectId: '1',
     moduleId: '6831b41f21f4ab6e71e973e2',
     testSuiteId: '6831a74fab07630af59e66f8',

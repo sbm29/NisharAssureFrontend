@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -15,6 +14,8 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
+import {useCreateTestSuite}  from '@/hooks/testsuites/useCreateTestSuite';
+import { TestSuite } from '@/types/projectStructure'; // Optional: If defined
 
 const testSuiteSchema = z.object({
   name: z.string().min(3, { message: 'Test suite name must be at least 3 characters.' }),
@@ -25,19 +26,22 @@ type TestSuiteFormValues = z.infer<typeof testSuiteSchema>;
 
 interface TestSuiteFormProps {
   moduleId: string;
-  onSubmit: ( data: TestSuiteFormValues) => void;
+  projectId: string;
   defaultValues?: Partial<TestSuiteFormValues>;
   isEditing?: boolean;
+  onSuccess?: (data: TestSuite) => void;
 }
 
 const TestSuiteForm: React.FC<TestSuiteFormProps> = ({
   moduleId,
-  onSubmit,
+  projectId,
   defaultValues,
   isEditing = false,
+  onSuccess,
 }) => {
   const { toast } = useToast();
-  
+  const createTestSuite = useCreateTestSuite();
+
   const form = useForm<TestSuiteFormValues>({
     resolver: zodResolver(testSuiteSchema),
     defaultValues: {
@@ -46,19 +50,43 @@ const TestSuiteForm: React.FC<TestSuiteFormProps> = ({
     },
   });
 
-  const handleSubmit = (values: TestSuiteFormValues) => {
-    onSubmit(values);
-     
+ console.log('props value', projectId );
+
+  const onSubmit = (data: TestSuiteFormValues) => {
+
     
-    toast({
-      title: `Test suite ${isEditing ? 'updated' : 'created'} successfully from test form `,
-      description: `"${values.name}" has been ${isEditing ? 'updated' : 'created'}.`,
-    });
+    if (!data.name) {
+      toast({
+        title: 'Error',
+        description: 'Test suite name is required',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    createTestSuite.mutate(
+      {
+        module: moduleId,
+        project: projectId,
+        name: data.name,
+        description: data.description,
+      },
+      {
+        onSuccess: (result) => {
+          form.reset();
+          toast({
+            title: `Test suite ${isEditing ? 'updated' : 'created'} successfully`,
+            description: `"${result.name}" has been ${isEditing ? 'updated' : 'created'}.`,
+          });
+          onSuccess?.(result);
+        },
+      }
+    );
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
           name="name"
@@ -72,7 +100,7 @@ const TestSuiteForm: React.FC<TestSuiteFormProps> = ({
             </FormItem>
           )}
         />
-        
+
         <FormField
           control={form.control}
           name="description"
@@ -80,19 +108,19 @@ const TestSuiteForm: React.FC<TestSuiteFormProps> = ({
             <FormItem>
               <FormLabel>Description (Optional)</FormLabel>
               <FormControl>
-                <Textarea 
-                  placeholder="Enter test suite description" 
+                <Textarea
+                  placeholder="Enter test suite description"
                   className="min-h-20"
-                  {...field} 
+                  {...field}
                 />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        
+
         <div className="flex justify-end gap-4">
-          <Button type="submit">
+          <Button type="submit" disabled={createTestSuite.isPending}>
             {isEditing ? 'Update Test Suite' : 'Create Test Suite'}
           </Button>
         </div>

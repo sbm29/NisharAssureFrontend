@@ -11,10 +11,10 @@ import RegisterPage from "./pages/RegisterPage";
 import UnauthorizedPage from "./pages/UnauthorizedPage";
 import Dashboard from "./pages/Dashboard";
 import Projects from "./pages/Projects";
-import ProjectDetail from "./pages/ProjectDetail";
-import ProjectStructure from "./pages/ProjectStructure";
-import TestCases from "./pages/TestCases";
-import TestCaseView from "./pages/TestCaseView";
+import ProjectDetail from "./pages/ProjectsDetails/ProjectDetail";
+//import ProjectStructure from "./pages/ProjectStructure";
+import TestCases from "./pages/TestCases/TestCases";
+import TestCaseView from "./pages/TestCases/TestCaseView";
 import TestExecution from "./pages/TestExecution";
 import TestRuns from "./pages/TestRuns";
 import TestRunDetail from "./pages/TestRunDetail";
@@ -22,8 +22,10 @@ import UserManagement from "./pages/UserManagement";
 import EditUser from "./pages/EditUser";
 import ProfilePage from "./pages/ProfilePage"; // Add the import
 import NotFound from "./pages/NotFound";
-import ProjectDashboard from "./pages/ProjectDashboard";
+import ProjectDashboard from "./pages/ProjectsDetails/ProjectDashboard";
+import ReleaseNotes from "./pages/ReleaseNotes";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import { ProjectSelectionProvider } from "./contexts/ProjectContext/ProjectSelectionContext";
 
 // Create a client for React Query
 const queryClient = new QueryClient();
@@ -48,9 +50,9 @@ const App = () => (
               
               <Route path="/" element={<Dashboard />} />
               <Route path="/projects" element={<ProtectedRoute children={<Projects />} />} />
-              <Route path="/projects/:projectId" element={<ProtectedRoute children={<ProjectDetail />} />} />
+              <Route path="/projects/:projectId" element={<ProtectedRoute children={<ProjectSelectionProvider><ProjectDetail /></ProjectSelectionProvider>} />} />
               <Route path="/projects/:id/dashboard" element={<ProtectedRoute children={<ProjectDashboard />} />} />
-              <Route path="/projects/:id/structure" element={<ProtectedRoute children={<ProjectStructure />} />} />
+              {/* <Route path="/projects/:id/structure" element={<ProtectedRoute children={<ProjectStructure />} />} /> */}
               <Route path="/test-cases" element={<ProtectedRoute children={<TestCases />} />} />
               <Route path="/test-cases/:id" element={<ProtectedRoute children={<TestCaseView />} />} />
               <Route path="/test-cases/:id/edit" element={<ProtectedRoute children={<TestCaseView isEditing />} />} />
@@ -60,8 +62,8 @@ const App = () => (
               <Route path="/test-runs/:id" element={<ProtectedRoute children={<TestRunDetail />} />} />
               <Route path="/user-management" element={<ProtectedRoute children={<UserManagement />} />} />
               <Route path="/user-management/edit/:id" element={<ProtectedRoute children={<EditUser />} />} />
-              <Route path="/profile" element={<ProtectedRoute children={<ProfilePage />} />} /> {/* Add the new route */}
-            
+              <Route path="/profile" element={<ProtectedRoute children={<ProfilePage />} />} /> 
+              <Route path="/release-notes" element={<ProtectedRoute children={<ReleaseNotes />} />} /> 
               {/* 404 Route */}
               <Route path="*" element={<NotFound />} />
             </Routes>

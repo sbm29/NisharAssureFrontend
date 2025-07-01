@@ -65,6 +65,8 @@ const ModuleForm: React.FC<ModuleFormProps> = ({
 
 
   const onSubmit = (data: ModuleFormValues) => {
+
+    console.log('Creating module:', { name: data.name, description: data.description, projectId: projectId }); 
     if (!data.name) {
       toast({
         title: "Error",
@@ -82,7 +84,7 @@ const ModuleForm: React.FC<ModuleFormProps> = ({
          },
       {
         onSuccess: (data) => {
-          console.log("Form submitted with:", data); // ✅ Add this
+          console.log("Form submitted with:", data); //
           form.reset();
           onSuccess?.(data);
           toast({

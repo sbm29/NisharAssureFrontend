@@ -31,6 +31,8 @@ import {
 import MoveTestCaseDialog from "@/components/projects/MoveTestCaseDialog";
 import { useIsMobile } from "@/hooks/use-mobile";
 
+
+
 interface TestCaseListProps {
   testCases: TestCase[];
   modules: Module[];
@@ -63,9 +65,11 @@ const TestCaseList: React.FC<TestCaseListProps> = ({
     TestCase[]
   >([]);
 
-  console.log("TestCaseList testCases", testCases);
+  console.table( testCases);
   console.log("TestCaseList modules", modules);
   console.log("TestCaseList testSuites", testSuites);
+
+
 
   const getPriorityBadge = (priority: string) => {
     switch (priority) {
@@ -315,39 +319,7 @@ const TestCaseList: React.FC<TestCaseListProps> = ({
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => onExecute(testCase._id)}
-                      title="Execute Test"
-                    >
-                      <CheckSquare className="h-4 w-4" />
-                    </Button>
-                    <Link to={`/test-cases/${testCase._id}/edit`}>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        title="Edit Test Case"
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                    </Link>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleMoveClick(testCase)}
-                      title="Move Test Case"
-                    >
-                      <Move className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleCopyClick(testCase)}
-                      title="Copy Test Case"
-                    >
-                      <Copy className="h-4 w-4" />
-                    </Button>
+                  
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon">

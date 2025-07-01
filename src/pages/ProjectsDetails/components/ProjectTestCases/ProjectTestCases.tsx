@@ -23,13 +23,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Plus } from "lucide-react";
-import TestCaseList from "@/components/test-cases/TestCaseList";
+import TestCaseList from "@/pages/ProjectsDetails/components/ProjectTestCases/TestCaseList";
 import TestCaseForm from "@/components/test-cases/TestCaseForm";
 import ImportTestCases from "@/components/test-cases/ImportTestCases";
 import { TestCase } from "@/types/testCase";
 import { Module, TestSuite } from "@/types/projectStructure";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertTriangle } from "lucide-react";
+import { useProjectSelection } from "../../../../contexts/ProjectContext/ProjectSelectionContext"
 
 // Define props interface for component
 interface ProjectTestCasesProps {
@@ -61,11 +62,17 @@ const ProjectTestCases: React.FC<ProjectTestCasesProps> = ({
   const [isTestCaseDialogOpen, setIsTestCaseDialogOpen] = useState(false);
   const [selectedTestCaseIds, setSelectedTestCaseIds] = useState<string[]>([]);
   // Check if a module and test suite are selected
+
+
   const noModuleSelected = !activeModule;
   const noTestSuiteSelected = activeModule && !activeTestSuite;
-  console.log("Active test suid id", activeTestSuite);
-  console.log("Active module id", activeModule);
-  console.log("Test cases from project detail to test cases", testCases);
+  //const noModuleOrTestSuiteSelected = !activeModule || !activeTestSuite;
+
+  
+
+  console.log("Active test suid id at PROJECT TEST CASE  ", activeTestSuite);
+  console.log("Active module id at PROJECT TEST CASE ", activeModule);
+  console.log("Test cases from project detail to test cases at PROJECT TEST CASE  ", testCases);
 
   const handleSuccess = () => {
     setIsTestCaseDialogOpen(false);
@@ -107,7 +114,7 @@ const ProjectTestCases: React.FC<ProjectTestCasesProps> = ({
             }}
           />
           {/* Add test case dialog */}
-          <Dialog>
+          <Dialog open={isTestCaseDialogOpen} onOpenChange={setIsTestCaseDialogOpen}>
             <DialogTrigger asChild>
               <Button disabled={!activeModule || !activeTestSuite}>
                 <Plus className="h-4 w-4 mr-2" />
@@ -124,7 +131,7 @@ const ProjectTestCases: React.FC<ProjectTestCasesProps> = ({
                   projectId={projectId}
                   onSuccess={handleSuccess}
                   testSuiteId={activeTestSuite}
-                  moduleId={activeModule}
+                  //moduleId={activeModule}
                 />
               </div>
             </DialogContent>
@@ -133,6 +140,20 @@ const ProjectTestCases: React.FC<ProjectTestCasesProps> = ({
       </CardHeader>
       <CardContent>
         {/* Display appropriate guidance when no module is selected */}
+        <div className="mb-2">
+            <Button 
+              className = {noModuleSelected || noTestSuiteSelected || testCases.length === 0 ? "hidden" : ""}
+              disabled={ selectedTestCaseIds.length === 0}
+              variant="destructive"
+              onClick={() => {
+                selectedTestCaseIds.forEach((id) => onDeleteTestCase(id));
+                setSelectedTestCaseIds([]);
+              }}
+            >
+              Delete Selected ({selectedTestCaseIds.length})
+            </Button> 
+          </div>
+
         {noModuleSelected && (
           <Alert>
             <AlertTriangle className="h-4 w-4" />
@@ -153,31 +174,7 @@ const ProjectTestCases: React.FC<ProjectTestCasesProps> = ({
         )}
 
         {/* Display test cases list when both module and test suite are selected */}
-        {/* {selectedTestCaseIds.length > 0 && ( */}
-          <div className="mb-2">
-            <Button
-            disabled={ selectedTestCaseIds.length === 0}
-              variant="destructive"
-              onClick={() => {
-                selectedTestCaseIds.forEach((id) => onDeleteTestCase(id));
-                setSelectedTestCaseIds([]);
-              }}
-            >
-              Delete Selected ({selectedTestCaseIds.length})
-            </Button>
-            {/* <Button
-              variant="outline"
-              onClick={() => {
-                if (!activeTestSuite) return;
-            
-                onMoveTestCase(selectedTestCaseIds, activeTestSuite); // only move selected
-                setSelectedTestCaseIds([]); // clear after move
-              }}
-            >
-              Move Selected ({selectedTestCaseIds.length})
-            </Button> */}
-          </div>
-        {/* )} */}
+        
 
         {activeModule && activeTestSuite && (
           <TestCaseList

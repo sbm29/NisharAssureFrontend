@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { User, UserRole } from "@/types/user";
 import axios from "axios";
+import {BaseURL} from "@/lib/config";
 
 interface AuthContextType {
   user: User | null;
@@ -13,8 +14,6 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-const BaseURL = import.meta.env.VITE_API_BASE_URL;
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -38,7 +37,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       if (!token) return;
 
       try {
-        const res = await axios.get<User>("/api/auth/me");
+        const res = await axios.get<User>(`${BaseURL}/api/auth/me`);
         setUser(res.data);
         setIsAuthenticated(true);
         setLoading(false);

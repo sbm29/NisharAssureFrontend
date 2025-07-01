@@ -114,7 +114,7 @@ useEffect(() => {
         ) : (
           <div className="dashboard-grid">
             {filteredProjects.map((project) => (
-              console.log("project",project),
+             // console.log("project",project),
               <ProjectCard key={project._id} project={project} />
             ))}
           </div>
