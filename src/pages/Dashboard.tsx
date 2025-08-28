@@ -22,22 +22,22 @@ const Dashboard = () => {
 
   const { data: project } = useAllProjects();
   const { data: testCases } = useAllTestCases();
-  console.log("Projects",project);
-  console.log("TestCases",testCases);
+  console.log("Projects", project);
+  console.log("TestCases", testCases);
 
   const totalProjects = project?.length;
   const activeProjects = project?.filter(
     (p: Project) => p.status === "Active"
   ).length;
   //const totalTestCases = project?.filter((p: Project) => p.testCaseCount > 0).length;
-  const totalTestCases : number = testCases?.length;
-  const PassedTestCases : number = testCases?.filter(
+  const totalTestCases: number = testCases?.length;
+  const PassedTestCases: number = testCases?.filter(
     (tc: TestCase) => tc.status === "Passed"
   ).length;
-  const FailedTestCases : number = testCases?.filter(
+  const FailedTestCases: number = testCases?.filter(
     (tc: TestCase) => tc.status === "Failed"
   ).length;
-  const PendingTestCases : number = testCases?.filter(
+  const PendingTestCases: number = testCases?.filter(
     (tc: TestCase) => tc.status === "Pending"
   ).length;
   const testCasesByStatus = [
@@ -46,16 +46,16 @@ const Dashboard = () => {
     { name: "Pending", value: PendingTestCases || 1, color: "#f59e0b" },
   ];
 
-  const criticalTestCase : number = testCases?.filter(
+  const criticalTestCase: number = testCases?.filter(
     (tc: TestCase) => tc.priority === "Critical"
   ).length;
-  const highTestCase : number = testCases?.filter(
+  const highTestCase: number = testCases?.filter(
     (tc: TestCase) => tc.priority === "High"
   ).length;
-  const mediumTestCase   : number = testCases?.filter(
+  const mediumTestCase: number = testCases?.filter(
     (tc: TestCase) => tc.priority === "Medium"
   ).length;
-  const lowTestCase : number = testCases?.filter(
+  const lowTestCase: number = testCases?.filter(
     (tc: TestCase) => tc.priority === "Low"
   ).length;
 
@@ -65,7 +65,7 @@ const Dashboard = () => {
     { name: "Medium", value: mediumTestCase, color: "#22d3ee" },
     { name: "Low", value: lowTestCase, color: "#60a5fa" },
   ];
-  const recentActivity = testCases?.map((tc: TestCase) => ( {
+  const recentActivity = testCases?.map((tc: TestCase) => ({
     id: tc._id,
     description: tc.title,
     timestamp: tc.updatedAt,
@@ -111,14 +111,17 @@ const Dashboard = () => {
           <StatusChart title="Test Case Priority" data={testCasesByPriority} />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <Card className="lg:col-span-2">
             <CardHeader>
               <CardTitle>Recent Activity</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
-                {recentActivity?.slice(-5).reverse().map((item) => (
+                {recentActivity
+                  ?.slice(-5)
+                  .reverse()
+                  .map((item) => (
                     <div key={item.id} className="flex items-start gap-3">
                       <div
                         className={`mt-1 w-2 h-2 rounded-full ${
@@ -154,8 +157,8 @@ const Dashboard = () => {
             <CardContent>
               <div className="space-y-4">
                 {project?.slice(0, 3)?.map((project: Project) => {
-                  console.log("Project recent activity",project);
-                  console.log("TestCases recent activity",testCases);
+                  console.log("Project recent activity", project);
+                  console.log("TestCases recent activity", testCases);
                   const count = testCases?.filter(
                     (tc) => tc.project._id === project.id
                   ).length;
@@ -177,7 +180,7 @@ const Dashboard = () => {
                         </p>
                       </div>
                       <div className="flex items-center justify-center h-8 w-8 rounded-full bg-muted-foreground/10 text-xs font-medium">
-                        {project.passRate}%
+                        {project.latestRunPassRate}%
                       </div>
                     </div>
                   );
@@ -185,7 +188,7 @@ const Dashboard = () => {
               </div>
             </CardContent>
           </Card>
-        </div>
+        </div> */}
       </div>
     </MainLayout>
   );

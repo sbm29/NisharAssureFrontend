@@ -32,6 +32,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { TestCase } from '@/types/testCase';
+import { useExecuteTestCase } from '@/hooks/testruns/useExecuteTestCase';
+import { useQueryClient } from '@tanstack/react-query';
 
 // Define schema for form validation using Zod
 const testExecutionSchema = z.object({
@@ -45,9 +47,11 @@ type TestExecutionFormValues = z.infer<typeof testExecutionSchema>;
 
 // Component props interface
 interface TestExecutionFormProps {
+  testRunId?: string;
   testCase: TestCase;
   onSubmit: (data: TestExecutionFormValues) => void;
   defaultValues?: Partial<TestExecutionFormValues>;
+  onSuccess: () => void;
 }
 
 /**
@@ -59,13 +63,17 @@ interface TestExecutionFormProps {
  * - Form validation
  */
 const TestExecutionForm: React.FC<TestExecutionFormProps> = ({
+  testRunId,
   testCase,
   onSubmit,
   defaultValues,
+  onSuccess
 }) => {
   // Initialize toast for notifications
+  const queryClient = useQueryClient();
+
   const { toast } = useToast();
-  
+  const { mutate, isPending } = useExecuteTestCase(testRunId);
   // Initialize form with React Hook Form and Zod validation
   const form = useForm<TestExecutionFormValues>({
     resolver: zodResolver(testExecutionSchema),
@@ -76,16 +84,43 @@ const TestExecutionForm: React.FC<TestExecutionFormProps> = ({
     },
   });
 
+ console.log( "Test Case Data at Execution Form",testCase);
+
   // Handle form submission
-  const handleSubmit = (values: TestExecutionFormValues) => {
-    onSubmit(values);
+  // const handleSubmit = (values: TestExecutionFormValues) => {
+  //   onSubmit(values);
     
-    // Show success notification
-    toast({
-      title: `Test case ${values.status.toLowerCase()}`,
-      description: `Test case "${testCase.title}" has been marked as ${values.status.toLowerCase()}.`,
-    });
+  //   // Show success notification
+  //   toast({
+  //     title: `Test case ${values.status.toLowerCase()}`,
+  //     description: `Test case "${testCase.title}" has been marked as ${values.status.toLowerCase()}.`,
+  //   });
+  // };
+
+const handleSubmit = (values: TestExecutionFormValues) => {
+    mutate(
+      {
+        testRunId,
+        testCaseId: testCase._id,
+        status: values.status,
+        actualResults: values.actualResults,
+        notes: values.notes,
+      },
+      {
+        onSuccess: () => {
+          toast({
+            title: `Test case ${values.status}`,
+            description: `"${testCase.title}" marked as ${values.status}`,
+          });
+          // Refresh metrics immediately
+          queryClient.invalidateQueries({ queryKey: ["testRunMetrics", testRunId] });
+          onSuccess();
+          //onclose?.(); // close dialog
+        },
+      }
+    );
   };
+
 
   return (
     <div className="space-y-6">

@@ -1,11 +1,3 @@
-/**
- * ProjectTestCases Component
- *
- * Displays and manages test cases for a project.
- * Provides functionality to create, delete, execute, move, and copy test cases.
- * Integrates with the test suite and module structure of a project.
- */
-
 import React, { useState } from "react";
 import {
   Card,
@@ -70,9 +62,9 @@ const ProjectTestCases: React.FC<ProjectTestCasesProps> = ({
 
   
 
-  console.log("Active test suid id at PROJECT TEST CASE  ", activeTestSuite);
-  console.log("Active module id at PROJECT TEST CASE ", activeModule);
-  console.log("Test cases from project detail to test cases at PROJECT TEST CASE  ", testCases);
+  //console.log("Active test suid id at PROJECT TEST CASE  ", activeTestSuite);
+  //console.log("Active module id at PROJECT TEST CASE ", activeModule);
+  //console.log("Test cases from project detail to test cases at PROJECT TEST CASE  ", testCases);
 
   const handleSuccess = () => {
     setIsTestCaseDialogOpen(false);

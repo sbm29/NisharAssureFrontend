@@ -1,15 +1,14 @@
-
 /**
  * ThemeToggle Component
- * 
+ *
  * This component provides a dropdown menu for theme selection.
  * - Allows users to switch between light, dark, and cupcake themes
  * - Uses icons to visually represent theme options
  * - Integrated with the ThemeContext for state management
  */
 
-import React from 'react';
-import { Moon, Sun, Palette } from 'lucide-react';
+import React from "react";
+import { Moon, Sun, Palette } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -17,7 +16,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useTheme } from '@/contexts/ThemeContext';
+import { useTheme } from "@/contexts/ThemeContext";
 
 // Theme selector dropdown component
 export function ThemeToggle() {
@@ -37,20 +36,20 @@ export function ThemeToggle() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         {/* Light theme option */}
-        <DropdownMenuItem onClick={() => setTheme('light')}>
+        <DropdownMenuItem onClick={() => setTheme("light")}>
           <Sun className="mr-2 h-4 w-4" />
           <span>Light</span>
         </DropdownMenuItem>
         {/* Dark theme option */}
-        <DropdownMenuItem onClick={() => setTheme('dark')}>
+        <DropdownMenuItem onClick={() => setTheme("dark")}>
           <Moon className="mr-2 h-4 w-4" />
           <span>Dark</span>
         </DropdownMenuItem>
-        {/* Cupcake theme option */}
-        <DropdownMenuItem onClick={() => setTheme('cupcake')}>
+        {/* Cupcake theme option
+        <DropdownMenuItem onClick={() => setTheme("cupcake")}>
           <Palette className="mr-2 h-4 w-4" />
           <span>Cupcake</span>
-        </DropdownMenuItem>
+        </DropdownMenuItem> */}
       </DropdownMenuContent>
     </DropdownMenu>
   );

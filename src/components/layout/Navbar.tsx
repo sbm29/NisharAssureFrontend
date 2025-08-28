@@ -1,7 +1,6 @@
-
 /**
  * Navbar Component
- * 
+ *
  * Main navigation header for the application that includes:
  * - Project title & logo
  * - User profile menu with authentication options
@@ -9,20 +8,20 @@
  * - Mobile-responsive menu handling
  */
 
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
-import { Button } from '@/components/ui/button';
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Menu, X } from 'lucide-react';
-import { ThemeToggle } from './ThemeToggle';
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Menu, X } from "lucide-react";
+import { ThemeToggle } from "./ThemeToggle";
 
 // This component renders the main navigation bar at the top of the application
 const Navbar = () => {
@@ -40,9 +39,9 @@ const Navbar = () => {
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -63,8 +62,8 @@ const Navbar = () => {
 
   // Get user initials for avatar fallback
   const getUserInitials = () => {
-    if (!user || !user.name) return 'U';
-    const nameParts = user.name.split(' ');
+    if (!user || !user.name) return "U";
+    const nameParts = user.name.split(" ");
     if (nameParts.length >= 2) {
       return `${nameParts[0][0]}${nameParts[1][0]}`.toUpperCase();
     }
@@ -72,16 +71,16 @@ const Navbar = () => {
   };
 
   return (
-    <nav 
-      className={`fixed top-0 w-full bg-background z-50 border-b transition-all ${
-        scrolled ? 'shadow-md' : ''
+    <nav
+      className={`sticky top-0 w-full p-3  bg-background z-50 border-b transition-all ${
+        scrolled ? "shadow-md" : ""
       }`}
     >
       <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center  h-16">
           {/* Logo/Brand */}
           <Link to="/" className="flex items-center" onClick={closeMobileMenu}>
-            <span className="font-bold text-xl">Test Manager</span>
+            <span className="font-bold text-xl"> {user.name}</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -91,7 +90,10 @@ const Navbar = () => {
                 <ThemeToggle />
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                    <Button
+                      variant="ghost"
+                      className="relative h-10 w-10 rounded-full"
+                    >
                       <Avatar>
                         <AvatarFallback>{getUserInitials()}</AvatarFallback>
                       </Avatar>
@@ -101,7 +103,9 @@ const Navbar = () => {
                     <div className="flex items-center justify-start gap-2 p-2">
                       <div className="flex flex-col space-y-1 leading-none">
                         <p className="font-medium">{user.name}</p>
-                        <p className="text-sm text-muted-foreground">{user.email}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {user.email}
+                        </p>
                       </div>
                     </div>
                     <DropdownMenuSeparator />
@@ -124,10 +128,10 @@ const Navbar = () => {
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center">
             {user && <ThemeToggle />}
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="ml-2" 
+            <Button
+              variant="ghost"
+              size="icon"
+              className="ml-2"
               onClick={toggleMobileMenu}
             >
               {isMobileMenuOpen ? <X /> : <Menu />}
@@ -146,26 +150,28 @@ const Navbar = () => {
                   </Avatar>
                   <div>
                     <p className="font-medium">{user.name}</p>
-                    <p className="text-sm text-muted-foreground">{user.email}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {user.email}
+                    </p>
                   </div>
                 </div>
                 <div className="space-y-2 pt-2 border-t">
-                  <Link 
-                    to="/profile" 
+                  <Link
+                    to="/profile"
                     className="block px-2 py-2 hover:bg-muted rounded-md"
                     onClick={closeMobileMenu}
                   >
                     Profile
                   </Link>
-                  <Link 
-                    to="/settings" 
+                  <Link
+                    to="/settings"
                     className="block px-2 py-2 hover:bg-muted rounded-md"
                     onClick={closeMobileMenu}
                   >
                     Settings
                   </Link>
-                  <button 
-                    className="w-full text-left px-2 py-2 hover:bg-muted rounded-md text-destructive" 
+                  <button
+                    className="w-full text-left px-2 py-2 hover:bg-muted rounded-md text-destructive"
                     onClick={handleLogout}
                   >
                     Logout
@@ -174,14 +180,14 @@ const Navbar = () => {
               </>
             ) : (
               <div className="flex flex-col space-y-2">
-                <Link 
+                <Link
                   to="/login"
                   className="block px-2 py-2 hover:bg-muted rounded-md"
                   onClick={closeMobileMenu}
                 >
                   Login
                 </Link>
-                <Link 
+                <Link
                   to="/register"
                   className="block px-2 py-2 hover:bg-muted rounded-md"
                   onClick={closeMobileMenu}

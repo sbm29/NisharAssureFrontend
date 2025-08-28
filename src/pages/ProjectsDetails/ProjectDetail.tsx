@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useParams, useLocation } from "react-router-dom";
 import { useProject } from "@/hooks/projects/useProject";
 import { useModules } from "@/hooks/modules/useModules";
 import { useTestSuites } from "@/hooks/testsuites/useTestSuites";
@@ -16,7 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { FileText, CheckSquare, Activity, ChartBar } from "lucide-react";
 import ProjectOverview from "@/components/projects/ProjectOverview";
 import ProjectTestCases from "@/pages/ProjectsDetails/components/ProjectTestCases/ProjectTestCases";
-import ProjectExecution from "@/components/projects/ProjectExecution";
+//import ProjectExecution from "@/components/projects/ProjectExecution";
 import ProjectModules from "@/pages/ProjectsDetails/components/ProjectModule/ProjectModules";
 import { toast } from "@/hooks/use-toast";
 import { fetchAllTestSuites } from "@/lib/api";
@@ -24,6 +24,7 @@ import { useDeleteTestCase } from "@/hooks/testcases/useDeleteTestCases";
 import { useMoveTestCases } from "@/hooks/testcases/useMoveTestCases";
 import { useCopyTestCases } from "@/hooks/testcases/useCopyTestCase";
 import { useProjectSelection } from "@/contexts/ProjectContext/ProjectSelectionContext";
+import ProjectTestRunsContent from "../TestExecution/ProjectTestRunContent";
 
 export default function ProjectDetail() {
   const { projectId } = useParams();
@@ -31,7 +32,8 @@ export default function ProjectDetail() {
   // const [activeTestSuiteId, setActiveTestSuiteId] = useState<string | null>(
   //   null
   // );
-  const [activeTab, setActiveTab] = useState("overview");
+  const location = useLocation();
+  const [activeTab, setActiveTab] = useState("test-cases");
   //const [isTestCaseDialogOpen, setIsTestCaseDialogOpen] = useState(false);
   const {
     activeModuleId,
@@ -56,6 +58,12 @@ export default function ProjectDetail() {
   console.log("TESTSUITES at PROJECT DETAIL Page ", testSuites);
   const { mutate: moveTestCase } = useMoveTestCases();
   const { mutate: copyTestCase } = useCopyTestCases();
+
+  useEffect(() => {
+    if (location.state?.activeTab) {
+      setActiveTab(location.state.activeTab);
+    }
+  }, [location.state]);
 
   const handleDelete = (testCaseId: string) => {
     deleteTestCase(testCaseId);
@@ -187,23 +195,23 @@ export default function ProjectDetail() {
           className="space-y-4"
         >
           <TabsList>
-            <TabsTrigger value="overview">
+            {/* <TabsTrigger value="overview">
               <Activity className="h-4 w-4 mr-2" />
               Overview
-            </TabsTrigger>
+            </TabsTrigger> */}
             <TabsTrigger value="test-cases">
               <FileText className="h-4 w-4 mr-2" />
               Test Cases
             </TabsTrigger>
-            <TabsTrigger value="execution">
+            <TabsTrigger value="test-execution">
               <CheckSquare className="h-4 w-4 mr-2" />
               Test Execution
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="overview">
+          {/* <TabsContent value="overview">
             <ProjectOverview project={project} />
-          </TabsContent>
+          </TabsContent> */}
 
           <TabsContent value="test-cases">
             <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
@@ -221,20 +229,6 @@ export default function ProjectDetail() {
               </div>
 
               <div className="md:col-span-3">
-                {/* <ProjectTestCases 
-                  projectId={project.id}
-                  testCases={filteredTestCases}
-                  activeModule={activeModuleId}
-                  activeTestSuite={activeTestSuiteId}
-                  modules={modules}
-                  testSuites={testSuites}
-                  onCreateTestCase={handleCreateTestCase}
-                  onDeleteTestCase={handleDeleteTestCase}
-                  onExecuteTestCase={handleExecuteTestCase}
-                  onMoveTestCase={handleMoveTestCase}
-                  onCopyTestCase={handleCopyTestCase}
-                /> */}
-
                 <ProjectTestCases
                   projectId={projectId!}
                   testCases={projectTestCases}
@@ -260,13 +254,13 @@ export default function ProjectDetail() {
             </div>
           </TabsContent>
 
-          <TabsContent value="execution">
-            <ProjectExecution
+          <TabsContent value="test-execution">
+            <ProjectTestRunsContent
               projectId={project.id}
-              testCases={testCases}
-              onNavigateToTestCases={() =>
-                console.log("handlefuncitonherepreviously")
-              }
+              //testCases={testCases}
+              //onNavigateToTestCases={() =>
+              //  console.log("handlefuncitonherepreviously")
+              //}
             />
           </TabsContent>
         </Tabs>

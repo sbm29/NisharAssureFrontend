@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -48,7 +48,7 @@ const testCaseSchema = z.object({
     .string()
     .min(5, { message: "Expected results are required." }),
   testSuite: z.string(),
-  project: z.string().optional(), // Assuming projectId is passed as prop
+  project: z.string().optional(), 
   createdBy: z.string().optional(),
 });
 
@@ -58,7 +58,7 @@ interface TestCaseFormProps {
   _id?: string;
   defaultValues?: Partial<TestCaseFormValues>;
   isEditing?: boolean;
-  projectId: string; // Project ID is required for creating/updating test cases
+  projectId: string; 
   testSuiteId?: string;
 
   onSuccess?: () => void;
@@ -92,13 +92,15 @@ const TestCaseForm: React.FC<TestCaseFormProps> = ({
     },
   });
 
+  
+
   const { isSubmitting } = form.formState;
 
   const { mutateAsync: createTestCase } = useAddTestCase();
   const { mutateAsync: updateTestCase } = useUpdateTestCase();
 
   //console.log("testSuiteId", testSuiteId);
-  
+
   const handleSubmit = async (data: TestCaseFormValues) => {
     console.log("Test Case data", data);
 
@@ -116,6 +118,7 @@ const TestCaseForm: React.FC<TestCaseFormProps> = ({
       console.log("_id", _id);
       if (isEditing && defaultValues._id) {
         // ✅ Update logic
+        setActiveTab("steps");
         console.log("Update logic");
         await updateTestCase({
           _id: defaultValues._id,
@@ -129,7 +132,7 @@ const TestCaseForm: React.FC<TestCaseFormProps> = ({
         await createTestCase({
           ...data,
           project: projectId,
-          testSuite: data.testSuite || testSuiteId,
+          testSuite: testSuiteId,
         });
         form.reset();
         if (onSuccess) onSuccess();
@@ -151,7 +154,15 @@ const TestCaseForm: React.FC<TestCaseFormProps> = ({
   };
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+      <form
+        onSubmit={(e) => {
+          console.log("Form submit triggered");
+          form.handleSubmit(handleSubmit, (errors) => {
+            console.log("Form validation failed", errors);
+          })(e);
+        }}
+        className="space-y-6"
+      >
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList
             className={`${isMobile ? "grid grid-cols-2" : ""} w-full md:w-auto`}
@@ -200,10 +211,7 @@ const TestCaseForm: React.FC<TestCaseFormProps> = ({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Priority</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
+                    <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select priority" />
@@ -227,10 +235,7 @@ const TestCaseForm: React.FC<TestCaseFormProps> = ({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Type</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
+                    <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select type" />

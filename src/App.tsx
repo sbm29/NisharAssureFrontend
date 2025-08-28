@@ -13,11 +13,13 @@ import Dashboard from "./pages/Dashboard";
 import Projects from "./pages/Projects";
 import ProjectDetail from "./pages/ProjectsDetails/ProjectDetail";
 //import ProjectStructure from "./pages/ProjectStructure";
+import ProjectTestRuns from "./pages/TestExecution/ProjectTestRuns";
+import TestExecutionMain from "./pages/TestExecution/TestExecutionMain";
 import TestCases from "./pages/TestCases/TestCases";
 import TestCaseView from "./pages/TestCases/TestCaseView";
-import TestExecution from "./pages/TestExecution";
+//import TestExecution from "./pages/TestExecution";
 import TestRuns from "./pages/TestRuns";
-import TestRunDetail from "./pages/TestRunDetail";
+import TestRunDetail from "./pages/TestExecution/TestRunDetail";
 import UserManagement from "./pages/UserManagement";
 import EditUser from "./pages/EditUser";
 import ProfilePage from "./pages/ProfilePage"; // Add the import
@@ -53,13 +55,13 @@ const App = () => (
               <Route path="/projects/:projectId" element={<ProtectedRoute children={<ProjectSelectionProvider><ProjectDetail /></ProjectSelectionProvider>} />} />
               <Route path="/projects/:id/dashboard" element={<ProtectedRoute children={<ProjectDashboard />} />} />
               {/* <Route path="/projects/:id/structure" element={<ProtectedRoute children={<ProjectStructure />} />} /> */}
-              <Route path="/test-cases" element={<ProtectedRoute children={<TestCases />} />} />
+               <Route path="/test-cases" element={<ProtectedRoute children={<TestCases />} />} /> 
               <Route path="/test-cases/:id" element={<ProtectedRoute children={<TestCaseView />} />} />
               <Route path="/test-cases/:id/edit" element={<ProtectedRoute children={<TestCaseView isEditing />} />} />
-              <Route path="/test-execution" element={<ProtectedRoute children={<TestExecution />} />} />
-              <Route path="/test-execution/:id" element={<ProtectedRoute children={<TestExecution />} />} />
+              <Route path="/test-execution" element={<ProtectedRoute children={<TestExecutionMain />} />} />
+              <Route path="/test-execution/:id" element={<ProtectedRoute children={<ProjectTestRuns />} />} />
               <Route path="/test-runs" element={<ProtectedRoute children={<TestRuns />} />} />
-              <Route path="/test-runs/:id" element={<ProtectedRoute children={<TestRunDetail />} />} />
+               <Route path="/test-runs/:id" element={<ProtectedRoute children={<TestRunDetail />} />} /> 
               <Route path="/user-management" element={<ProtectedRoute children={<UserManagement />} />} />
               <Route path="/user-management/edit/:id" element={<ProtectedRoute children={<EditUser />} />} />
               <Route path="/profile" element={<ProtectedRoute children={<ProfilePage />} />} /> 
