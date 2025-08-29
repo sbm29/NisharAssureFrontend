@@ -16,6 +16,7 @@ import { useAllProjects } from "@/hooks/projects/useAllProjects";
 import { Project } from "@/types/project";
 import { useAllTestCases } from "@/hooks/testcases/useAllTestCases";
 import { TestCase } from "@/types/testCase";
+import SampleDataBadge from "@/components/ui/sampledataBadege";
 
 const Dashboard = () => {
   //const { testCasesByStatus, testCasesByPriority, recentActivity } = dashboardStats;
@@ -78,7 +79,7 @@ const Dashboard = () => {
         <div>
           <h1 className="text-2xl font-bold">Dashboard</h1>
           <p className="text-muted-foreground mt-1">
-            Overview of your testing projects
+            Overview of your testing projects <SampleDataBadge />
           </p>
         </div>
 

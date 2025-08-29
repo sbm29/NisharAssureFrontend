@@ -22,3 +22,15 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Env files
+.env
+.env.*    # optional, if you keep multiple env files
+!.env.example
+
+.turbo
+.cache
+.vite
+
+yarn.lock
+pnpm-lock.yaml

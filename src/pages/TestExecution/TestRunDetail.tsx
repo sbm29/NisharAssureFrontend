@@ -48,6 +48,7 @@ import { useAddTestCaseToRun } from "@/hooks/testruns/useAddTestCaseToRun";
 import { error } from "console";
 import { useTestRunMetrics } from "@/hooks/testruns/useTestRunMetrics";
 import { TestCase } from "@/types/testCase";
+import SampleDataBadge from "@/components/ui/sampledataBadege";
 
 const TestRunDetail = () => {
   const { id: testRunId } = useParams<{ id: string }>();
@@ -354,9 +355,8 @@ const TestRunDetail = () => {
             <TabsContent value="overview">
               <Card>
                 <CardHeader>
-                  <CardTitle>
-                    Test Run Summary : To be revisited later , add charts , etc{" "}
-                  </CardTitle>
+                  <CardTitle>Test Run Summary</CardTitle>
+                  <SampleDataBadge />
                   <CardDescription>
                     Overview of the test run execution status
                   </CardDescription>
@@ -404,7 +404,9 @@ const TestRunDetail = () => {
                     <div>
                       <h3 className="text-lg font-medium mb-4">
                         Status Distribution
+                        <SampleDataBadge />
                       </h3>
+
                       <div className="h-80 bg-muted/20 rounded-md flex items-end justify-around p-4">
                         <div className="flex flex-col items-center space-y-2">
                           <div className="bg-gray-200 h-[60%] w-16 rounded-t-md"></div>

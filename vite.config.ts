@@ -5,13 +5,19 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  server: {
-    host: "::",
-    port: 8080,
-  },
+  
   build: {
-    minify: 'terser', // 'esbuild' is faster, but 'terser' is better for obfuscation
-    sourcemap: false, // prevent browser from mapping to source code
+    minify: 'terser', 
+    sourcemap: false, 
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+      },
+      format: {
+        comments: false,
+      }
+    },
   },
   plugins: [
     react(),

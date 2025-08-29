@@ -15,6 +15,10 @@ const ProjectTestRuns = () => {
     isError,
   } = useTestRunsByProject(projectId!);
 
+  console.log("Project ID from URL:", projectId);
+
+  console.log("🔍 ProjectTestRuns - testRunsForProject:", testRunsForProject);
+
   return (
     <MainLayout>
       <div className="flex items-center justify-between mb-6 pt-2">
