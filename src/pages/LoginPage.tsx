@@ -301,33 +301,33 @@ const LoginPage = () => {
   return (
     <div className="min-h-screen flex">
       {/* Left Side - Login Form */}
-      <div className="flex flex-col justify-center w-full lg:w-2/5 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="w-full max-w-md mx-auto">
+      <div className="flex flex-col justify-center w-full pt-4 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="w-full max-w-sm mx-auto">
           {/* App logo/name header */}
-          <div className="text-center mb-8">
-            <h1 className="text-5xl font-bold text-primary mb-2">
+          <div className="text-center mb-6">
+            <h1 className="text-4xl font-bold text-primary mb-2">
               Nishar Assure
             </h1>
-            <p className="text-gray-600 text-xl">
+            <p className="text-gray-600 text-lg">
               "Built for Our Team, by Our Team"
             </p>
           </div>
 
           {/* Login form card */}
           <Card className="border-2 border-primary p-4 shadow-none">
-            <CardHeader className="px-0">
-              <CardTitle className="text-2xl font-semibold text-gray-900">
+            <CardHeader className="p-0">
+              <CardTitle className="text-2xl font-semibold text-gray-900 text-center">
                 Welcome back
               </CardTitle>
-              <CardDescription className="text-gray-600">
+              {/* <CardDescription className="text-gray-600 text-center">
                 Enter your credentials to access your account
-              </CardDescription>
+              </CardDescription> */}
             </CardHeader>
-            <CardContent className="px-0">
+            <CardContent className="px-0 pt-2">
               <Form {...form}>
                 <form
                   onSubmit={form.handleSubmit(onSubmit)}
-                  className="space-y-4"
+                  className="space-y-3"
                 >
                   {/* Email field */}
                   <FormField
@@ -342,7 +342,7 @@ const LoginPage = () => {
                           <Input
                             placeholder="email@example.com"
                             type="email"
-                            className="h-12 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                            className="h-10 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                             {...field}
                           />
                         </FormControl>
@@ -362,7 +362,7 @@ const LoginPage = () => {
                         <FormControl>
                           <Input
                             type="password"
-                            className="h-12 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                            className="h-10 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                             {...field}
                           />
                         </FormControl>
@@ -373,7 +373,7 @@ const LoginPage = () => {
                   {/* Submit button */}
                   <Button
                     type="submit"
-                    className="w-full h-12 bg-cyan-500 hover:bg-cyan/80 text-white font-medium rounded-lg"
+                    className="w-full h-10 pt-1 bg-primary hover:bg-cyan/80 text-gray-900 font-medium text-md rounded-lg"
                     disabled={isLoading}
                   >
                     {isLoading ? "Signing in..." : "Sign in"}
@@ -399,7 +399,7 @@ const LoginPage = () => {
           {/* Demo credentials section */}
           <div className="mt-8 p-4 bg-gray-50 rounded-lg">
             <p className="text-sm font-medium text-gray-700 mb-2">
-              Demo Credentials:
+              Demo Credentials (Beta Version) :
             </p>
             <div className="text-xs text-gray-600 space-y-1">
               <p>
@@ -415,58 +415,6 @@ const LoginPage = () => {
           </div>
         </div>
       </div>
-
-      {/* Right Side - App Information */}
-      <div className="hidden lg:flex justify-center lg:w-3/5 bg-primary/60 relative overflow-hidden">
-        {/* Background pattern using CSS instead of inline SVG */}
-        <div
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='7' cy='7' r='7'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }}
-        ></div>
-
-        <div className="relative z-10 border border-cyan-600 rounded-lg m-4 shadow-xl  flex flex-col justify-center px-12 py-16 text-white">
-          <div className="max-w-lg">
-            <h2 className="text-4xl font-bold mb-6 text-cyan-500">
-              Tailored Test Management for Our Workflow
-            </h2>
-            <p className="text-xl text-gray-800 mb-12 leading-relaxed">
-              Nishar Assure is our in-house test management platform, helping
-              teams streamline testing and ship with confidence.
-            </p>
-
-            {/* Features list */}
-            <div className="space-y-6">
-              {features.map((feature, index) => (
-                <div key={index} className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 p-2 bg-slate-50 rounded-lg backdrop-blur-sm">
-                    {feature.icon}
-                  </div>
-                  <div>
-                    <h3 className="font-semibold  text-xl mb-1">
-                      {feature.title}
-                    </h3>
-                    <p className="text-gray-800 text-sm leading-relaxed">
-                      {feature.description}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-           
-
-            {/* Trusted by section */}
-            {/* <div className="mt-12 pt-8 border-t border-white/20">
-              <div className="flex items-center space-x-2 text-blue-200">
-                <CheckCircle className="h-5 w-5" />
-                <span className="text-sm">Trusted by 500+ testing teams worldwide</span>
-              </div>
-            </div> */}
-          </div>
-        </div>
-      </div>
-      
     </div>
   );
 };
