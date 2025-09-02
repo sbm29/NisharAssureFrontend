@@ -8,7 +8,7 @@ export const useCreateTestRun = (projectId: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: { name: string; description?: string }) => {
+    mutationFn: async (data: { name: string; description?: string, projectId: string }) => {
       const res = await axios.post(`${API_BASE_URL}/api/testruns/create`, {
         ...data,
         projectId,

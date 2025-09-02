@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -6,13 +6,14 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { useToast } from '@/hooks/use-toast';
-import { useCreateTestRun } from '@/hooks/testruns/useCreateTestRun'; 
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import { useCreateTestRun } from "@/hooks/testruns/useCreateTestRun";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface CreateTestRunDialogProps {
   open: boolean;
@@ -26,39 +27,44 @@ const CreateTestRunDialog: React.FC<CreateTestRunDialogProps> = ({
   projectId,
 }) => {
   const { toast } = useToast();
-  const [testRunName, setTestRunName] = useState('');
-  const [testRunDescription, setTestRunDescription] = useState('');
+  const [testRunName, setTestRunName] = useState("");
+  const [testRunDescription, setTestRunDescription] = useState("");
 
   const createTestRun = useCreateTestRun(projectId);
+  const { user } = useAuth();
 
   const handleCreate = () => {
     if (!testRunName.trim()) {
       toast({
-        title: 'Validation Error',
-        description: 'Please provide a name for the test run',
-        variant: 'destructive',
+        title: "Validation Error",
+        description: "Please provide a name for the test run",
+        variant: "destructive",
       });
       return;
     }
 
     createTestRun.mutate(
-      { name: testRunName.trim(), description: testRunDescription.trim() },
+      {
+        name: testRunName.trim(),
+        description: testRunDescription.trim(),
+        projectId,
+      },
       {
         onSuccess: () => {
           toast({
-            title: 'Test Run Created',
+            title: "Test Run Created",
             description: `${testRunName} has been created successfully.`,
           });
           // Reset form and close modal
-          setTestRunName('');
-          setTestRunDescription('');
+          setTestRunName("");
+          setTestRunDescription("");
           onOpenChange(false);
         },
         onError: () => {
           toast({
-            title: 'Error',
-            description: 'Failed to create test run. Please try again.',
-            variant: 'destructive',
+            title: "Error",
+            description: "Failed to create test run. Please try again.",
+            variant: "destructive",
           });
         },
       }
@@ -99,11 +105,8 @@ const CreateTestRunDialog: React.FC<CreateTestRunDialogProps> = ({
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button
-            onClick={handleCreate}
-            disabled={createTestRun.isPending}
-          >
-            {createTestRun.isPending ? 'Creating...' : 'Create Test Run'}
+          <Button onClick={handleCreate} disabled={createTestRun.isPending}>
+            {createTestRun.isPending ? "Creating..." : "Create Test Run"}
           </Button>
         </DialogFooter>
       </DialogContent>

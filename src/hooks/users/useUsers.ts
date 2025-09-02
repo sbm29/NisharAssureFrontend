@@ -69,7 +69,7 @@ export const useDeleteUser = () => {
 
   return useMutation({
     mutationFn: async (id: string) => {
-      await axios.delete(`${API}/api/users/${id}`);
+      await axios.put(`${API}/api/users/${id}/deactivate`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });

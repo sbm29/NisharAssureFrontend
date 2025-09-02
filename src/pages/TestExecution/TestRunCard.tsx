@@ -13,7 +13,7 @@ interface TestRunCardProps {
     description: string;
     status: string;
     passRate: number;
-      projectName: string;
+    projectName: string;
     projectId: string;
     createdAt: Date;
     createdBy: {
@@ -39,7 +39,7 @@ const getStatusBadge = (status: string) => {
 };
 
 const TestRunCard: React.FC<TestRunCardProps> = ({ testRun }) => {
-console.log("TestRunCard Props:", testRun);
+  console.log("TestRunCard Props:", testRun);
 
   return (
     <Card className="flex flex-col justify-between">
@@ -56,7 +56,7 @@ console.log("TestRunCard Props:", testRun);
                 ? new Date(testRun.createdAt).toLocaleDateString()
                 : "Unknown"}
             </div>
-            <div>by {testRun?.createdBy.name}</div>
+            <div>by {testRun?.createdBy?.name || "Unknown"}</div>
           </div>
         </div>
         {/* <div className="flex items-center justify-between text-sm">
@@ -66,8 +66,10 @@ console.log("TestRunCard Props:", testRun);
           </div>
         </div> */}
         <div className="text-right">
-                  <Link to={`/test-runs/${testRun._id}`}
-                  state={{ fromProjectId: testRun.projectId, fromTab: "execution" }}>
+          <Link
+            to={`/test-runs/${testRun._id}`}
+            state={{ fromProjectId: testRun.projectId, fromTab: "execution" }}
+          >
             <Button size="sm" variant="ghost">
               <ArrowRight className="w-4 h-4 mr-1" />
               View
