@@ -254,7 +254,7 @@ const TestRunDetail = () => {
                     : "N/A"}
                 </span>
                 <span>•</span>
-                <span>by {testRun.createdBy.name}</span>
+                <span>by {testRun?.createdBy?.name}</span>
               </div>
             </div>
             <div className="space-x-2">
