@@ -26,6 +26,8 @@ dist-ssr
 # Env files
 .env
 .env.*    # optional, if you keep multiple env files
+.env.development
+.env.production
 !.env.example
 
 .turbo
