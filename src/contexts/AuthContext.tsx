@@ -342,6 +342,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   });
 
+  const BaseUrl02 = import.meta.env.BASE_URL;
+
+  console.log("BaseURL from config:", BaseURL);
+  console.log("BaseUrl02 from env:", BaseUrl02);
+
   // Set initial authenticated state based on user presence
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!user);
 
